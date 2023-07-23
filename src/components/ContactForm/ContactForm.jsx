@@ -1,35 +1,34 @@
 import React from 'react';
 import { useState } from 'react';
-import { nanoid } from 'nanoid';
-import { addContact } from 'redux/contactsSlice';
+import { addContact } from 'redux/operations';
 import { useDispatch, useSelector } from 'react-redux';
 import { contactsStorage } from '../../redux/selectors';
 import css from './ContactForm.module.css';
 
 export default function ContactForm() {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
   const contacts = useSelector(contactsStorage);
   const dispatch = useDispatch();
 
-  const checkContactExist = (name, number) => {
+  const checkContactExist = (name, phone) => {
     return (
       contacts &&
       contacts.find(
         contact =>
           contact.name.toLowerCase() === name.toLowerCase() ||
-          contact.number === number
+          contact.phone === phone
       )
     );
   };
 
   const handleSubmit = event => {
     event.preventDefault();
-    const newContact = { id: nanoid(), name, number };
+    const newContact = { name, phone };
 
-    if (checkContactExist(name, number)) {
+    if (checkContactExist(name, phone)) {
       alert(
-        `${name} is already in contacts or number: ${number} is used with another contact`
+        `${name} is already in contacts or number: ${phone} is used with another contact`
       );
       handleReset();
       return;
@@ -40,15 +39,16 @@ export default function ContactForm() {
 
   const handleReset = () => {
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   return (
     <>
       <form onSubmit={handleSubmit}>
         <label>
-          <h2 className={css.name}>Name</h2>
+          <h2 className={css.title}>Name</h2>
           <input
+            className={css.contactInput}
             type="text"
             name="name"
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -60,15 +60,16 @@ export default function ContactForm() {
         </label>
 
         <label>
-          <h2 className={css.number}>Number</h2>
+          <h2 className={css.title}>Number</h2>
           <input
+            className={css.contactInput}
             type="tel"
             name="number"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
-            value={number}
-            onChange={e => setNumber(e.target.value)}
+            value={phone}
+            onChange={e => setPhone(e.target.value)}
           />
         </label>
 

@@ -1,5 +1,13 @@
-.name, .number {
+.title {
     margin: 5px 0px;
+    font-size: 20px;
+}
+.contactInput {
+        &:hover,
+        &:focus {
+        border: 2px solid rgb(197, 219, 241);
+        outline: none;
+    }
 }
 
 .addContactBtn {
